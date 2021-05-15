@@ -1,4 +1,5 @@
-== Running simulator app ==
+## Build and Run Fitbit App in Simulator ##
+
 [Link](https://dev.fitbit.com/build/guides/command-line-interface/)
 
 * First time launch
