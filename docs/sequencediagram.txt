@@ -1,0 +1,21 @@
+title LinkFit Architecture
+actor User
+participant FitBit
+participant Companion App
+participant LinkFit Api
+
+User->FitBit:
+FitBit->Companion App: Health DataSync
+Companion App->LinkFit Api: Submit Health Data
+LinkFit Api->Smart Contract: SC Submit Redemption Request
+Smart Contract->Chainlink Adapter: Get redemption amt
+Chainlink Adapter->LinkFit Api: Get redemption amt
+LinkFit Api->Chainlink Adapter: Redemption amt response
+Chainlink Adapter->Smart Contract: Verified token transfer amt
+Smart Contract->Blockchain: SC Transfer token
+Smart Contract->LinkFit Api: Redemption Response
+LinkFit Api->Smart Contract: SC Crypto Balance Request
+Blockchain->Smart Contract: Token Balance
+Smart Contract->LinkFit Api: Crypto Balance Response
+LinkFit Api->Companion App: Crypto Balance Response
+Companion App->FitBit: Crypto Sync

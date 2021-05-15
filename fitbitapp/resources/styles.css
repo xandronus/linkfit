@@ -1,0 +1,93 @@
+#background {
+  x: 0;
+  y: 0;
+  width: 100%;
+  height: 100%;
+  fill: #000000;
+}
+
+.clock-text {
+  font-family: Colfax-Light;
+  font-size: 105;
+  text-anchor: middle;
+  text-length: 10;
+  x: 50%;
+  y: 50%-25;
+  width: 100%;
+  height: 100%;
+  fill: #FA1E43;
+}
+
+.date-text {
+  font-family: Seville;
+  font-size: 26;
+  text-anchor: middle;
+  text-length: 32;
+  x: 50%;
+  y: 50%+39;
+  width: 100%;
+  height: 100%;
+  fill: #FFFFFF;
+}
+
+.divider {
+  x: 50%-111;
+  width: 222;
+  height: 1;
+  fill: #646464;
+}
+
+.divider-top {
+  y: 50%;
+}
+
+.divider-btm {
+  y: 50%+59;
+}
+
+.stats {
+  x: 50%-111;
+  y: 50%+66;
+  width: 222;
+  height: 48;
+}
+
+.stats text {
+  font-family: SevilleSharp;
+  font-size: 30;
+  text-length: 16;
+  fill: #FFFFFF;
+}
+
+#iconHRM {
+  width: 24;
+  height: 24;
+  y: 15;
+  x: 1;
+  fill: #FF214A;
+}
+
+.stat-left {
+  x: 31;
+}
+
+.stat-right {
+  x: 100%;
+  width: 100%;
+  text-anchor: end
+}
+
+#stats-cycle {
+  x: 40%;
+  y: 0;
+  width: 60%;
+  height: 100%;
+}
+
+.cycle-item image {
+  x: 50%;
+  y: 15;
+  fill: #FFFFFF;
+  width: 24;
+  height: 24;
+}
