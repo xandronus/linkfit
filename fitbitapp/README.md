@@ -1,6 +1,5 @@
-Running simuator app
-[https://dev.fitbit.com/build/guides/command-line-interface/]
-
+== Running simulator app ==
+[Link](https://dev.fitbit.com/build/guides/command-line-interface/)
 
 * First time launch
 ```
@@ -8,7 +7,7 @@ npm add --dev @fitbit/sdk
 npm add --dev @fitbit/sdk-cli
 npx fitbit-build generate-appid
 ```
-* Start Fitbit Simulator [https://simulator-updates.fitbit.com/download/latest/win]
+* Start Fitbit Simulator [Download Link](https://simulator-updates.fitbit.com/download/latest/win)
 * Launch fitbit shell
 ``` 
 npx fitbit-build
