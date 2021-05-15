@@ -3,6 +3,7 @@
   <text id="txtTime" class="clock-text">13:37</text>
   <rect class="divider divider-top" />
   <text id="txtDate" class="date-text">MON JANUARY 01</text>
+  <text id="txtCrypto" class="crypto-text">$100</text>
   <rect class="divider divider-btm" />
   <svg class="stats">
     <use id="iconHRM" href="#heart-beat" />

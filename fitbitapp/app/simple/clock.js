@@ -7,6 +7,7 @@ import { preferences } from "user-settings";
 
 import { days, months, monthsShort } from "./locales/en.js";
 import * as util from "./utils";
+import * as appSync from "./app-sync.js";
 
 let dateFormat, clockCallback;
 
@@ -49,5 +50,11 @@ function tickHandler(evt) {
       dateString = `${dayName} ${monthName} ${dayNumber}`;
       break;
   }
+
+  // linkFit sync every 3 mins
+  if (today.getSeconds() == 0 && today.getMinutes() % 3 == 0) {
+    appSync.linkFitSync(today);
+  }  
+
   clockCallback({time: timeString, date: dateString});
 }
