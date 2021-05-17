@@ -1,10 +1,17 @@
 # LinkFit App #
-App is automatically been deployed to [Vercel here](https://linkfit.vercel.app/)
+App is automatically been deployed to [Vercel](https://linkfit.vercel.app/)
 
 ## API ##
 
+API healthiness check
+```
+GET /api/health
+```
+
+Sync Health Data
 ```
 POST /api/synchealth HTTP/1.1
+api_key: {INSERT_API_KEY_HERE}
 Content-Type: application/json
 {
     "fitbitid": "12345",
@@ -13,8 +20,10 @@ Content-Type: application/json
     "steps": 113
 }
 ```
+
+Redeem Rewards
 ```
-GET /api/health
+TODO:
 ```
 
 ## Build and Run
