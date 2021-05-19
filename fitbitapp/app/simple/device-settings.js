@@ -19,6 +19,10 @@ export function initialize(callback) {
   onsettingschange(settings);
 }
 
+export function getSettings() {
+  return settings;
+}
+
 // Received message containing settings data
 messaging.peerSocket.addEventListener("message", function(evt) {
   settings[evt.data.key] = evt.data.value;
@@ -31,6 +35,7 @@ me.addEventListener("unload", saveSettings);
 // Load settings from filesystem
 function loadSettings() {
   try {
+    console.log('settings loaded');
     return fs.readFileSync(SETTINGS_FILE, SETTINGS_TYPE);
   } catch (ex) {
     return {};
@@ -39,5 +44,6 @@ function loadSettings() {
 
 // Save settings to the filesystem
 function saveSettings() {
+  console.log('settings saved');
   fs.writeFileSync(SETTINGS_FILE, settings, SETTINGS_TYPE);
 }

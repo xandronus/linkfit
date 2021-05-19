@@ -62,6 +62,14 @@ const options = [
 function mySettings(props) {
   return (
     <Page>
+      <Section title="LinkFit Settings">
+        <TextInput label="Eth Address" settingsKey="ethAddr">
+        </TextInput>
+        <TextInput label="Api Url" settingsKey="apiUrl">
+        </TextInput>
+        <TextInput label="Api Key" settingsKey="apiKey">
+        </TextInput>
+      </Section>
       {options.map(([title, settingsKey]) =>
         <Section
           title={title}>
