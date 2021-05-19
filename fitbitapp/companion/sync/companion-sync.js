@@ -48,4 +48,30 @@ export function initialize() {
 */
 export function onHealthSync(data) {
     console.log('Sync Received:' + JSON.stringify(data));
+
+    const url = data.apiUrl.name + '/synchealth';
+    var opts = 
+    {
+        fitbitid: data.fitbitId,
+        cryptoaddr: data.ethAddr.name,
+        timestamp: data.dateTime,
+        steps: data.activity.steps
+    };
+    console.log(`POST: ${url} - ${JSON.stringify(opts)}`);
+    fetch(url, {
+        method: 'post',
+        headers: {
+            'api_key': data.apiKey.name
+        },        
+        body: JSON.stringify(opts)
+    }).then(response => {
+        if (!response.ok) {            
+            throw Error(response.statusText);
+        }
+        return response;
+    }).then(response => response.json()).then(data => {
+        console.log('Success:', data);
+    }).catch((error) => {
+        console.error(error);
+    });
 }
