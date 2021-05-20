@@ -61,6 +61,8 @@ export function onHealthSync(data) {
     fetch(url, {
         method: 'post',
         headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',  
             'api_key': data.apiKey.name
         },        
         body: JSON.stringify(opts)
