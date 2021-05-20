@@ -40,13 +40,12 @@ export async function addOrGetAccount(fbid, cpid) {
         await createAccount(fbid, cpid, Date.now());    
     } else {
         var search = {fitbitid: fbid, cryptoaddr: cpid};
-        model.Account.findOne(search, async function(err, account) {
-            if (err || !account) {
-                await createAccount(fbid, cpid, Date.now());
-            } else {
-                console.log('found account');
-            }
-        });
+        var account = await model.Account.findOne(search);
+        if (!account) {
+            await createAccount(fbid, cpid, Date.now());
+        } else {
+            console.log('found account');
+        }
     }
 }
 
@@ -83,27 +82,25 @@ export async function syncHealthData(health) {
             }
         };
         console.log(`Health search filter: ${JSON.stringify(search)}`);
-        model.HealthData.findOne(search, async function(err, healthData) {
-            if (err || !healthData) {
-                await createHealthData(health, date);
+        var healthData = await model.HealthData.findOne(search);
+        if (!healthData) {
+            await createHealthData(health, date);
+        } else {
+            console.log(`Updating daily health record ${healthData._id}`);
+            if (healthData.steps !== health.steps) {
+                healthData.steps = health.steps;
+                healthData.timestamp = date;
+                await healthData.save(function(err){
+                    if (err) {
+                        console.log(`Error updating health data ${healthData._id}`);
+                    }
+                    else {
+                        console.log(`Updated health data ${healthData._id}`);
+                    }
+                });
             } else {
-                console.log(`Updating daily health record ${healthData._id}`);
-                if (healthData.steps !== health.steps) {
-                    healthData.steps = health.steps;
-                    healthData.timestamp = date;
-                    await healthData.save(function(err){
-                        if (err) {
-                            console.log(`Error updating health data ${healthData._id}`);
-                        }
-                        else {
-                            console.log(`Updated health data ${healthData._id}`);
-                        }
-                    });
-                } else {
-                    console.log(`Health data has not changed for ${healthData._id}, no update required.`);
-                }
+                console.log(`Health data has not changed for ${healthData._id}, no update required.`);
             }
-        });
+        }
     }
 }
-
