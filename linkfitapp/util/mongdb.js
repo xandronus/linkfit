@@ -22,14 +22,13 @@ async function createAccount(fbid, cpid, date) {
     console.log('creating account');                
     const model = DbSchema.getModels();
     var id = newId();
-    var newAccount = new model.Account({_id: id, fitbitid:fbid, cryptoaddr:cpid, timestamp:date});    
-    await newAccount.save(function(err) {
-        if (err) {
-          console.log(`Failed to save account ${id}`);
-        } else {
-          console.log(`Successfully created new account ${id}`);
-        }
-    });
+    try {
+        var newAccount = new model.Account({_id: id, fitbitid:fbid, cryptoaddr:cpid, timestamp:date});    
+        var savedAccount = await newAccount.save();
+        console.log(`Successfully created new account ${savedAccount._id}`);
+    } catch(err) {
+        console.log(`Failed to save account ${id}`);
+    }
 }
 
 export async function addOrGetAccount(fbid, cpid) {
@@ -52,16 +51,14 @@ export async function addOrGetAccount(fbid, cpid) {
 async function createHealthData(health, date) {
     var id = newId();
     console.log(`Creating new daily health record ${id}`);
-    const model = DbSchema.getModels();
-    var newhealthData = new model.HealthData({_id: id, fitbitid:health.fitbitid, cryptoaddr:health.cryptoaddr, timestamp:date, steps:health.steps, claimed:false});
-    await newhealthData.save(function(err){
-        if (err) {
-            console.log(`Error creating health data ${newhealthData._id} - ${err.message}`);
-        }
-        else {
-            console.log(`Created health data ${newhealthData._id}`);
-        }
-    });            
+    try {
+        const model = DbSchema.getModels();
+        var newhealthData = new model.HealthData({_id: id, fitbitid:health.fitbitid, cryptoaddr:health.cryptoaddr, timestamp:date, steps:health.steps, claimed:false});
+        var savedHealth = await newhealthData.save();
+        console.log(`Created health data ${savedHealth._id}`);
+    } catch(err) {
+        console.log(`Error creating health data ${newhealthData._id} - ${err.message}`);
+    }    
 }
 
 export async function syncHealthData(health) {
@@ -90,14 +87,12 @@ export async function syncHealthData(health) {
             if (healthData.steps !== health.steps) {
                 healthData.steps = health.steps;
                 healthData.timestamp = date;
-                await healthData.save(function(err){
-                    if (err) {
-                        console.log(`Error updating health data ${healthData._id}`);
-                    }
-                    else {
-                        console.log(`Updated health data ${healthData._id}`);
-                    }
-                });
+                try {
+                    var savedHealth = await healthData.save();
+                    console.log(`Updated health data ${savedHealth._id}`);
+                } catch (err) {
+                    console.log(`Error updating health data ${healthData._id} - ${err.message}`);
+                }
             } else {
                 console.log(`Health data has not changed for ${healthData._id}, no update required.`);
             }

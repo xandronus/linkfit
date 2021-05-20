@@ -10,15 +10,14 @@ export default async(req, res) => {
   else {
     const model = DbSchema.getModels()
     if (model) {
-      var newId = database.newId();
-      var newAccount = new model.Account({_id: newId, fitbitid:"testfitbitid", cryptoaddr:"testcryptoaddr", timestamp:Date.now()});
-      await newAccount.save(function(err) {
-        if (err) {
-          res.status(400).json({success: false, message: 'Cannot create account'});
-        } else {
-          res.status(200).json(newAccount);
-        }
-      });
+      try {
+        var newId = database.newId();
+        var newAccount = new model.Account({_id: newId, fitbitid:"testfitbitid", cryptoaddr:"testcryptoaddr", timestamp:Date.now()});
+        var savedAccount = await newAccount.save();
+        res.status(200).json(savedAccount);
+      } catch(err) {
+        res.status(400).json({success: false, message: 'Cannot create account'});
+      }
     } else {
       res.status(400).json({success: false, message: 'No mongo account model'});
     }
