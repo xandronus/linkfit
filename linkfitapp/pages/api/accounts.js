@@ -1,7 +1,7 @@
 import * as database from "../../util/mongdb.js"
 import {DbSchema} from '../../util/mongodbschema'
 
-export default (req, res) => {
+export default async(req, res) => {
   await database.connect();
   const apikey = req.headers.api_key;
   if (!apikey || apikey !== process.env.API_KEY) {
