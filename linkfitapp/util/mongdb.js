@@ -6,16 +6,11 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
   } 
 
-export async function connect(onConnected) {
+export async function connect() {
     if (mongoose.connection.readyState != 1) {
-        mongoose.connect(process.env.DB_CONN, { useNewUrlParser: true })
-          .then(() => {
-            DbSchema.createSchemas();
-            DbSchema.createModel();
-            onConnected();
-          })        
-      } else {      
-        onConnected();
+        await mongoose.connect(process.env.DB_CONN, { useNewUrlParser: true });
+        DbSchema.createSchemas();
+        DbSchema.createModel();
       }
 }
 
