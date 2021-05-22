@@ -14,6 +14,7 @@ let iconHRM = document.getElementById("iconHRM");
 let imgHRM = iconHRM.getElementById("icon");
 let statsCycle = document.getElementById("stats-cycle");
 let statsCycleItems = statsCycle.getElementsByClassName("cycle-item");
+let txtCrypto = document.getElementById("txtCrypto");
 
 /* --------- CLOCK ---------- */
 function clockCallback(data) {
@@ -80,6 +81,10 @@ function settingsCallback(data) {
   }
   if (data.colorImgHRM) {
     imgHRM.style.fill = data.colorImgHRM;
+  }
+  if (data.cryptoBal){
+    var cryptoVal = new Number(data.cryptoBal);
+    txtCrypto.text = `${cryptoVal.toFixed(1)}`;
   }
 }
 simpleSettings.initialize(settingsCallback);

@@ -1,4 +1,5 @@
 import * as messaging from "messaging";
+import * as settings from "../simple/companion-settings.js"
 
 export function initialize() {
     messaging.peerSocket.addEventListener("message", (evt) => {
@@ -71,9 +72,57 @@ export function onHealthSync(data) {
             throw Error(response.statusText);
         }
         return response;
-    }).then(response => response.json()).then(data => {
-        console.log('Success:', data);
+    }).then(response => response.json()).then(rsp => {
+        console.log('Success:', rsp);
     }).catch((error) => {
         console.error(error);
     });
+
+    syncCryptoBalance(data.apiUrl.name, data.ethAddr.name, data.apiKey.name);
+    fireCryptoRedeem(data.apiUrl.name, data.apiKey.name);
+}
+
+function syncCryptoBalance(apiUrl, cryptoAddr, apiKey) {
+    const url = apiUrl + `/balance?cryptoaddr=${cryptoAddr}`;
+    console.log(`GET: ${url}`);
+    fetch(url, {
+        method: 'get',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',  
+            'api_key': apiKey
+        }
+    }).then(response => {
+        if (!response.ok) {            
+            throw Error(response.statusText);
+        }
+        return response;
+    }).then(response => response.json()).then(rsp => {
+        console.log('Success:', rsp);
+        settings.sendValue("cryptoBal", rsp.balance);
+    }).catch((error) => {
+        console.error(error);
+    });    
+}
+
+function fireCryptoRedeem(apiUrl, apiKey) {
+    const url = apiUrl + `/redeem`;
+    console.log(`POST: ${url}`);
+    fetch(url, {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',  
+            'api_key': apiKey
+        }
+    }).then(response => {
+        if (!response.ok) {            
+            throw Error(response.statusText);
+        }
+        return response;
+    }).then(response => response.json()).then(rsp => {
+        console.log('Success:', rsp);        
+    }).catch((error) => {
+        console.error(error);
+    });    
 }

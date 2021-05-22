@@ -9,7 +9,7 @@ export function initialize() {
   });
 }
 
-function sendValue(key, val) {
+export function sendValue(key, val) {
   if (val) {
     sendSettingData({
       key: key,
