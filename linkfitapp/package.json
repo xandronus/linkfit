@@ -10,6 +10,7 @@
   "dependencies": {
     "date-fns": "^2.21.3",
     "dotenv": "^9.0.2",
+    "ethers": "^5.2.0",
     "mongodb": "^3.6.6",
     "mongoose": "^5.12.9",
     "next": "10.2.0",

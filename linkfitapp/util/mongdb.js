@@ -4,7 +4,7 @@ import * as fns from 'date-fns'
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
-  } 
+}  
 
 export async function connect() {
     if (mongoose.connection.readyState != 1) {

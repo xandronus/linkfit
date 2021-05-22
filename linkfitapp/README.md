@@ -3,13 +3,21 @@ App is automatically been deployed to [Vercel](https://linkfit.vercel.app/)
 
 ## API ##
 
-API healthiness check
+**API healthiness check**
 ```
+REQUEST:
 GET /api/health
+
+RESPONSE:
+{
+    "success": true,
+    "message": "Healthy"
+}
 ```
 
-Sync Health Data
+**Sync Health Data**
 ```
+REQUEST:
 POST /api/synchealth HTTP/1.1
 api_key: {INSERT_API_KEY_HERE}
 Content-Type: application/json
@@ -19,11 +27,47 @@ Content-Type: application/json
     "timestamp": "2021-05-17T01:41:15.348Z",
     "steps": 113
 }
+
+RESPONSE:
+{
+    "success": true
+}
 ```
 
-Redeem Rewards
+**Redeem Rewards**
 ```
-TODO:
+REQUEST:
+POST /api/redeem HTTP/1.1
+api_key: {INSERT_API_KEY_HERE}
+
+RESPONSE:
+{
+    "success": true
+}
+```
+
+**Token Balance**
+```
+REQUEST:
+GET /api/balance?cryptoaddr={ETH_ENS_ADDRESS_HERE} HTTP/1.1
+api_key: {INSERT_API_KEY_HERE}
+
+RESPONSE:
+{
+    "success": true,
+    "balance": "0.986730694479989101"
+}
+```
+
+## Configuration
+
+.env
+```
+DB_CONN="{mongo connection string}"
+API_KEY="{INSERT_API_KEY_HERE}"
+ETH_NET="ropsten"
+ALCHEMY_KEY="{alchemyapikey}"
+PRIVATE_KEY="{smartcontract-private-key}"
 ```
 
 ## Build and Run
