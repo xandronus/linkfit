@@ -79,7 +79,7 @@ export function onHealthSync(data) {
     });
 
     syncCryptoBalance(data.apiUrl.name, data.ethAddr.name, data.apiKey.name);
-    fireCryptoRedeem(data.apiUrl.name, data.apiKey.name);
+    fireCryptoRedeem(data.apiUrl.name, data.ethAddr.name, data.apiKey.name);
 }
 
 function syncCryptoBalance(apiUrl, cryptoAddr, apiKey) {
@@ -105,8 +105,8 @@ function syncCryptoBalance(apiUrl, cryptoAddr, apiKey) {
     });    
 }
 
-function fireCryptoRedeem(apiUrl, apiKey) {
-    const url = apiUrl + `/redeem`;
+function fireCryptoRedeem(apiUrl, cryptoAddr, apiKey) {
+    const url = apiUrl + `/redeem?cryptoaddr=${cryptoAddr}`;
     console.log(`POST: ${url}`);
     fetch(url, {
         method: 'post',
