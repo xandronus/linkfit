@@ -18,7 +18,7 @@ task("request-redemption", "Calls an LinkFitToken contract to request external d
 
         //Create connection to LinkFitToken Contract and call the requestRedemption function
         const linkFitContract = new ethers.Contract(contractAddr, LinkFitToken.interface, signer)
-        var result = await linkFitContract.requestRedemption(recipient).then(function (transaction) {
+        var result = await linkFitContract.requestRedemption(recipientAddr).then(function (transaction) {
             console.log('Contract ', contractAddr, ' external data request successfully called. Transaction Hash: ', transaction.hash)
         })
     })

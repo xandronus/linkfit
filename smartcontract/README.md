@@ -8,6 +8,12 @@
 
 # LinkFitToken Contract
  
+ Rinkeby
+ 0xC42Ccf9dd981E16B353F66ef71c50A3E380CEE10
+
+ Kovan
+ 0xff69f4227CCc5376E777C3D44d31245e607905f4
+
  ## Requirements
 
 - [NPM](https://www.npmjs.com/) or [YARN](https://yarnpkg.com/)
