@@ -1,3 +1,4 @@
+import {parse as parseQuery} from "querystring";
 import * as database from "../../util/mongdb.js"
 
 export default async (req, res) => {
@@ -9,9 +10,12 @@ export default async (req, res) => {
   }
   else {
     if (req.method === 'POST') {
-        console.log(`POST /redeem`);            
-        // TODO: Redeem logic
-        success = true;
+      const url = new URL(req.url, 'http://localhost');
+      const query = parseQuery(url.search.substr(1));
+      console.log(`POST /redeem => cryptoaddr: ${query.cryptoaddr}`);
+      // TODO: Call smart contract to redeem for this address if there
+      // is anything to redeem
+      success = true;
     }        
   }
 

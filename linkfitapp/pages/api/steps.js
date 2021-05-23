@@ -1,7 +1,9 @@
 import {parse as parseQuery} from "querystring";
-import * as crypto from "../../util/crypto.js"
+import * as database from "../../util/mongdb.js"
 
 export default async (req, res) => {
+
+  await database.connect();
   var respBody = {success:false};
   var respStatus = 400;
 
@@ -14,9 +16,10 @@ export default async (req, res) => {
     if (req.method === 'GET') {            
       const url = new URL(req.url, 'http://localhost');
       const query = parseQuery(url.search.substr(1));
-      console.log(`GET /balance => cryptoaddr: ${query.cryptoaddr}`);
-      var coinBalance = await crypto.getTokenBalance(query.cryptoaddr);
-      respBody = {success:true, balance:coinBalance};
+      console.log(`GET /steps => cryptoaddr: ${query.cryptoaddr}`);
+      //TODO: redeem steps from mongo
+      //var coinBalance = await crypto.getTokenBalance(query.cryptoaddr);
+      respBody = {success:true, steps:"100"};
       respStatus = 200;  
     }        
   }
