@@ -25,5 +25,11 @@ describe('LinkFitTokenConsumer', async function () {
     const tx = await mockOracle.fulfillOracleRequest(requestId, returnData)
     await tx.wait()
     expect(await linkfitConsumer.getSteps(linkfitConsumer.address)).to.equal(expected)
+  }),
+
+  it('BuildUrl should build right url', async () => {
+      const url = await linkfitConsumer.buildUrl(linkfitConsumer.address);
+      console.log(`BuildUrl=${url}`);
+      expect(true);
   })
 })

@@ -9,10 +9,10 @@
 # LinkFitToken Contract
  
  Rinkeby
- 0xC42Ccf9dd981E16B353F66ef71c50A3E380CEE10
+ 0xa413b2c82ae4C0E4879CAb947f035538f20e835B
 
  Kovan
- 0xff69f4227CCc5376E777C3D44d31245e607905f4
+ 0xd89921566A395ceB9dB77D2710FDbaDCdbcc12dA
 
  ## Requirements
 
@@ -93,7 +93,7 @@ npx hardhat fund-link --contract insert-contract-address-here --network network
 ```
 
 ```bash
-npx hardhat request-redemption --contract insert-contract-address-here --network network
+npx hardhat request-redemption --contract insert-contract-address-here --recipient insert-receipient-address-here --network network
 ```
 
 ### Request & Receive Data

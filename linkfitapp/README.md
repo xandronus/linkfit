@@ -37,7 +37,7 @@ RESPONSE:
 **Redeem Rewards**
 ```
 REQUEST:
-POST /api/redeem HTTP/1.1
+POST /api/redeem?cryptoaddr={ETH_ADDRESS_HERE} HTTP/1.1
 api_key: {INSERT_API_KEY_HERE}
 
 RESPONSE:
@@ -49,13 +49,37 @@ RESPONSE:
 **Token Balance**
 ```
 REQUEST:
-GET /api/balance?cryptoaddr={ETH_ENS_ADDRESS_HERE} HTTP/1.1
+GET /api/balance?cryptoaddr={ETH_ADDRESS_HERE} HTTP/1.1
 api_key: {INSERT_API_KEY_HERE}
 
 RESPONSE:
 {
     "success": true,
     "balance": "0.986730694479989101"
+}
+```
+
+**Steps To Redeem**
+```
+REQUEST:
+GET /api/steps?cryptoaddr={ETH_ADDRESS_HERE} HTTP/1.1
+
+RESPONSE:
+{
+    "success": true,
+    "steps": "100"
+}
+```
+
+**Normalize Crypto Address**
+```
+REQUEST:
+GET /api/cryptoaddr?cryptoaddr={ETH_ADDRESS_HERE} HTTP/1.1
+
+RESPONSE:
+{
+    "success": true,
+    "steps": "100"
 }
 ```
 

@@ -1,5 +1,6 @@
 import {parse as parseQuery} from "querystring";
 import * as database from "../../util/mongdb.js"
+import * as crypto from "../../util/crypto.js"
 
 export default async (req, res) => {
   var success = false
@@ -12,7 +13,8 @@ export default async (req, res) => {
     if (req.method === 'POST') {
       const url = new URL(req.url, 'http://localhost');
       const query = parseQuery(url.search.substr(1));
-      console.log(`POST /redeem => cryptoaddr: ${query.cryptoaddr}`);
+      console.log(`POST /redeem => cryptoaddr: ${query.cryptoaddr}`);      
+      var addr = await crypto.normalizeAddress(query.cryptoaddr);
       // TODO: Call smart contract to redeem for this address if there
       // is anything to redeem
       success = true;

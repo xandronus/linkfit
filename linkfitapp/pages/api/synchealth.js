@@ -1,4 +1,5 @@
 import * as database from "../../util/mongdb.js"
+import * as crypto from "../../util/crypto.js"
 
 export default async (req, res) => {
   var success = false
@@ -9,10 +10,16 @@ export default async (req, res) => {
   }
   else {
     if (req.method === 'POST') {
-        console.log(`POST /synchealth => ${JSON.stringify(req.body)}`);            
-        await database.addOrGetAccount(req.body.fitbitid, req.body.cryptoaddr);
-        await database.syncHealthData(req.body);
-        success = true;
+        console.log(`POST /synchealth => ${JSON.stringify(req.body)}`);
+        
+        var addr = await crypto.normalizeAddress(req.body.cryptoaddr);
+        if (addr != null) {
+          console.log(`  CryptoAddr normalized to ${addr}`);
+          req.body.cryptoaddr = addr;
+          await database.addOrGetAccount(req.body.fitbitid, req.body.cryptoaddr);
+          await database.syncHealthData(req.body);
+          success = true;  
+        }
     }        
   }
 
