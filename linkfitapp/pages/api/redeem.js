@@ -15,8 +15,13 @@ export default async (req, res) => {
       const query = parseQuery(url.search.substr(1));
       console.log(`POST /redeem => cryptoaddr: ${query.cryptoaddr}`);      
       var addr = await crypto.normalizeAddress(query.cryptoaddr);
-      // TODO: Call smart contract to redeem for this address if there
-      // is anything to redeem
+      if (database.isRedeemSteps()) {
+        console.log('  Steps are available to redeem, calling contract');
+        await crypto.redeemTokens(addr);
+      }
+      else {
+        console.log('  No steps to redeem, redemption skipped.');
+      }
       success = true;
     }        
   }

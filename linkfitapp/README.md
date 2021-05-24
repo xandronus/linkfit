@@ -89,7 +89,7 @@ RESPONSE:
 ```
 DB_CONN="{mongo connection string}"
 API_KEY="{INSERT_API_KEY_HERE}"
-ETH_NET="rinkeby"
+ETH_NET="kovan"
 ALCHEMY_KEY="{alchemyapikey}"
 PRIVATE_KEY="{smartcontract-private-key}"
 ```

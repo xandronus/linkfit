@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import TokenAbi from './LinkFitToken.json';
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
@@ -10,16 +11,25 @@ export async function getEthBalance(address) {
 }
 
 export async function getTokenBalance(address) {
-    // TODO: for now stub out using eth call
-    return getEthBalance(address);
-    /*    
-    const tokenAddress = '0xAEFS...'; // insert TRON token contract address here
-    const getBalance = async (options) => {
-      const contract = new Contract(tokenAddress, abi, options.provider);
-      const balance = await contract.balanceOf(options.address);
-      return balance.toString();
-    };
-    */
+    const provider = new ethers.providers.AlchemyProvider(process.env.ETH_NET, process.env.ALCHEMY_KEY);
+    const contract = new ethers.Contract(TokenAbi.address, TokenAbi.abi, provider);
+    const balance = await contract.balanceOf(address);
+    return balance.toString();    
+}
+
+export async function redeemTokens(address) {
+    const provider = new ethers.providers.AlchemyProvider(process.env.ETH_NET, process.env.ALCHEMY_KEY);
+    let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+    let contract = new ethers.Contract(TokenAbi.address, TokenAbi.abi, wallet);
+    await contract.requestRedemption(address);
+}
+
+export async function getStepRate() {
+    const provider = new ethers.providers.AlchemyProvider(process.env.ETH_NET, process.env.ALCHEMY_KEY);
+    let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+    let contract = new ethers.Contract(TokenAbi.address, TokenAbi.abi, wallet);
+    const stepRate = ethers.utils.formatEther(await contract.getStepRate());
+    return stepRate;
 }
 
 // Normalizes crypto addresses to hex CheckSum addresses - which are used for keys in the database

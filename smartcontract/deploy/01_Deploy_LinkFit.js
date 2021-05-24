@@ -26,7 +26,7 @@ module.exports = async ({
 
   const linkfit = await deploy('LinkFitToken', {
     from: deployer,
-    args: [oracle, jobId, fee, linkTokenAddress, "https://linkfit.vercel.app/api"],
+    args: [oracle, jobId, fee, linkTokenAddress, "https://linkfit.vercel.app/api", 10**15], // 10^15 redeption rate = 1 token / 1000 daily steps
     log: true
   })
 

@@ -1,24 +1,25 @@
 pragma solidity ^0.6.6;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.6/ChainlinkClient.sol";
 
-contract LinkFitToken is ERC20, ChainlinkClient {
+contract LinkFitToken is ERC20, Ownable, ChainlinkClient  {
     uint private constant TOTAL_SUPPLY = 10**27;
-    string private constant NAME = 'TST LinkFit Token';
-    string private constant SYMBOL = 'TLFIT';
-
-    uint256 public volume;
-   
+    string private constant NAME = 'LinkFit Token';
+    string private constant SYMBOL = 'LFIT';
+  
     address private oracle;
     bytes32 private jobId;
     uint256 private fee;
+    
     string private apiUrl;
-
+    uint256 private stepRate; // step rate in wei/step
+    
     mapping (bytes32 => address) private requests;
-    mapping (address => uint256) private _steps; // todo: temp to test 
+    mapping (address => uint256) private _steps;
 
-    constructor(address _oracle, string memory _jobId, uint256 _fee, address _link, string memory _apiUrl) public ERC20(NAME, SYMBOL) {
+    constructor(address _oracle, string memory _jobId, uint256 _fee, address _link, string memory _apiUrl, uint256 _stepRate) public ERC20(NAME, SYMBOL) {
         _mint(msg.sender, TOTAL_SUPPLY);
 
         if (_link == address(0)) {
@@ -26,32 +27,36 @@ contract LinkFitToken is ERC20, ChainlinkClient {
         } else {
             setChainlinkToken(_link);
         }
+
         oracle = _oracle;
         jobId = stringToBytes32(_jobId);
         fee = _fee;
+
         setApiUrl(_apiUrl);
+        setStepRate(_stepRate);
     }
 
-    function setApiUrl(string memory _apiUrl) public {
+    function setApiUrl(string memory _apiUrl) public onlyOwner  {
         apiUrl = _apiUrl;
+    }
+
+    // step rate in wei/step
+    function setStepRate(uint256 _stepRate) public onlyOwner {
+        stepRate = _stepRate;
+    }
+
+    // step rate in wei/step
+    function getStepRate() public view returns (uint256 rate) {
+        return stepRate;
     }
 
     function requestRedemption(address recipient) public returns (bytes32 requestId) {
         Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
              
         // Set the URL to perform the GET request on
-        request.add("get", buildUrl(recipient));
-        
-        // Set the path to find the desired data in the API response, where the response format is:
-        // {"RAW":
-        //   {"ETH":
-        //    {"USD":
-        //     {
-        //      "VOLUME24HOUR": xxx.xxx,
-        //     }
-        //    }
-        //   }
-        //  }
+        request.add("get", buildUrl(recipient));        
+
+        // value in response to use
         request.add("path", "steps");
            
         // Sends the request
@@ -67,17 +72,19 @@ contract LinkFitToken is ERC20, ChainlinkClient {
         // find recipient address for the request
         address recipient = requests[requestId];
 
-        //todo: temp to test
-        _steps[recipient] = steps;
+        if (recipient != address(0)) {
+            // track steps redeemed
+            _steps[recipient] = _steps[recipient] + steps;
 
-        // do stuff with steps to fund
-        // redemption rate per step should be stored in the sc
+            // grant tokens for steps
+            transfer(recipient, stepRate * steps);
+        }
 
         // cleanup
         delete requests[requestId];        
+
     }
 
-    // TODO: temp to test
     function getSteps(address recipient) public view returns (uint256 result) {
         return _steps[recipient];        
     }
@@ -110,7 +117,7 @@ contract LinkFitToken is ERC20, ChainlinkClient {
         return string(bytesArray);
     }
 
-    function addressToString(address x) internal view returns (string memory) {
+    function addressToString(address x) internal pure returns (string memory) {
         bytes memory s = new bytes(40);
         for (uint i = 0; i < 20; i++) {
             bytes1 b = bytes1(uint8(uint(uint160(x)) / (2**(8*(19 - i)))));
@@ -122,7 +129,7 @@ contract LinkFitToken is ERC20, ChainlinkClient {
         return string(s);
     }
 
-    function ascchar(bytes1 b) internal view returns (bytes1 c) {
+    function ascchar(bytes1 b) internal pure returns (bytes1 c) {
         if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
         else return bytes1(uint8(b) + 0x57);
     }
