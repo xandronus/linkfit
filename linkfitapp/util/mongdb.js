@@ -99,3 +99,42 @@ export async function syncHealthData(health) {
         }
     }
 }
+
+export async function redeemSteps(addr) {
+    var cumulativeSteps = 0;
+    const model = DbSchema.getModels();
+    var date = new Date(Date.now());
+    var search = {
+        cryptoaddr: addr, 
+        timestamp: {
+            $lt: fns.startOfDay(date)
+        }
+    };
+    console.log(`Redeem search filter: ${JSON.stringify(search)}`);
+    const redeemedIds = [];
+    for await (const healthRec of model.HealthData.find(search)) {
+        cumulativeSteps = cumulativeSteps + healthRec.steps;
+        healthRec.claims = true;
+        // add record to redeem
+        try {
+            var savedHealthRec = await healthRec.save();
+            redeemedIds.push(savedHealthRec._id);
+            console.log(`Successfully updated health data ${healRec._id}`)
+        } catch(err) {
+            console.log(`Failure updating health data ${healthRec._id} - ${err.message}`);
+        }        
+    }
+
+    if (redeemedIds.length > 0) {
+        try {
+            var id = newId();
+            var newRedeemed = new model.Redeemed({_id: id, addr, timestamp:date, steps:cumulativeSteps, healthDataRecs: redeemedIds});
+            var savedRedeemed = await newRedeemed.save();
+            console.log(`Created redeemed ${savedRedeemed._id}`);
+        } catch(err) {
+            console.log(`Error redeemed for addr ${addr} - ${err.message}`);
+        }        
+    }
+
+    return cumulativeSteps;
+}

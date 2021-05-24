@@ -44,12 +44,6 @@ You can also use a `PRIVATE_KEY` instead of a `MNEMONIC` environment variable by
 Then you can install all the dependencies
 
 ```bash
-git clone https://github.com/smartcontractkit/chainlink-hardhat-box
-cd chainlink-hardhat-box
-```
-then
-
-```bash
 npm install
 ```
 
@@ -61,7 +55,7 @@ yarn
 
 ## Deploy
 
-Deployment scripts are in the [deploy](https://github.com/pappas999/chainlink-hardhat-box/tree/main/deploy) directory. If required, edit the desired environment specific variables or constructor parameters in each script, then run the hardhat deployment plugin as follows. If no network is specified, it will default to the Kovan network.
+Deployment scripts are in the deploy directory. If required, edit the desired environment specific variables or constructor parameters in each script, then run the hardhat deployment plugin as follows. If no network is specified, it will default to the Kovan network.
 
 This will deploy to a local hardhat network
 
@@ -75,7 +69,7 @@ npx hardhat deploy --network kovan
 ```
 
 ## Test
-Tests are located in the [test](https://github.com/pappas999/chainlink-hardhat-box/tree/main/test) directory and can be modified as required. To run them:
+Tests are located in the test directory and can be modified as required. To run them:
 
 ```bash
 npx hardhat test
@@ -95,8 +89,6 @@ npx hardhat fund-link --contract insert-contract-address-here --network network
 ```bash
 npx hardhat request-redemption --contract insert-contract-address-here --recipient insert-receipient-address-here --network network
 ```
-
-### Request & Receive Data
 
 ## Verify on Etherscan
 

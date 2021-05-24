@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose'
 export var DbSchema = (function(){
     var _accountSchema = null;
     var _healthDataSchema = null;
+    var _redeemedSchema = null;
   
     function createSchemas(){
         if (!_accountSchema) {
@@ -23,6 +24,15 @@ export var DbSchema = (function(){
                 claimed: Boolean
             });            
         }
+        if (!_redeemedSchema) {
+            _redeemedSchema = new mongoose.Schema({
+                _id: mongoose.Schema.Types.ObjectId,
+                cryptoaddr: String,
+                timestamp: Date,
+                steps: Number,
+                healthDataRecs: [mongoose.Schema.Types.ObjectId]
+            });
+        }
         console.log('Schemas created');
     }
 
@@ -37,12 +47,17 @@ export var DbSchema = (function(){
         return _healthDataSchema;
     }
 
+    function getRedeemedSchema(){
+        return _redeemedSchema;
+    }
+
     function getModels(){
         console.log("getting mongo models");
         const Account = mongoose.model('Account', _accountSchema);
         const HealthData = mongoose.model('HealthData', _healthDataSchema);
+        const Redeemed = mongoose.model('Redeemed', _redeemedSchema);
     
-        return {'Account': Account, 'HealthData': HealthData};        
+        return {'Account': Account, 'HealthData': HealthData, 'Redeemed': Redeemed};        
     }
    
     return {
@@ -50,6 +65,7 @@ export var DbSchema = (function(){
         createModel: createModel,
         getAccountSchema: getAccountSchema,
         getHealthDataSchema: getHealthDataSchema,
+        getRedeemedSchema: getRedeemedSchema,
         getModels: getModels
     };
   }());

@@ -5,14 +5,15 @@ export default async (req, res) => {
     var respBody = {success:false};
     var respStatus = 400;
 
-
     if (req.method === 'GET') {            
         const url = new URL(req.url, 'http://localhost');
-        const query = parseQuery(url.search.substr(1));
-        console.log(`GET /cryptoaddr => cryptoaddr: ${query.cryptoaddr}`);
-        var addr = await crypto.normalizeAddress(query.cryptoaddr);
-        respBody = {success:true, address:addr};
-        respStatus = 200;  
+        const query = parseQuery(url.search.substr(1));        
+        if (query.cryptoaddr) {
+            console.log(`GET /cryptoaddr => cryptoaddr: ${query.cryptoaddr}`);
+            var addr = await crypto.normalizeAddress(query.cryptoaddr);
+            respBody = {success:true, address:addr};
+            respStatus = 200;
+        }  
     }        
 
     console.log(`  ${respStatus} => ${JSON.stringify(respBody)}`);
