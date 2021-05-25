@@ -16,12 +16,17 @@ export default async (req, res) => {
       console.log(`POST /redeem => cryptoaddr: ${query.cryptoaddr}`);      
       var addr = await crypto.normalizeAddress(query.cryptoaddr);
       if (database.isRedeemSteps()) {
-        console.log('  Steps are available to redeem, calling contract');
-        await crypto.redeemTokens(addr);
+        console.log('  Steps are available to redeem, initiating contract');
+        await crypto.transferSteps(addr);
       }
       else {
-        console.log('  No steps to redeem, redemption skipped.');
+        console.log('  No steps to redeem, redemption skipped');
       }
+
+      if (await crypto.redeemTokens(addr)) {
+        console.log('  Steps present in contract, tokens transferred');
+      }
+
       success = true;
     }        
   }

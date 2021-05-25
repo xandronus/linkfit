@@ -50,7 +50,7 @@ contract LinkFitToken is ERC20, Ownable, ChainlinkClient  {
         return stepRate;
     }
 
-    function requestRedemption(address recipient) public returns (bytes32 requestId) {
+    function requestRedemption(address recipient) public onlyOwner returns (bytes32 requestId) {
         Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
              
         // Set the URL to perform the GET request on
@@ -71,18 +71,22 @@ contract LinkFitToken is ERC20, Ownable, ChainlinkClient  {
     function fulfill(bytes32 requestId, uint256 steps) public recordChainlinkFulfillment(requestId) {
         // find recipient address for the request
         address recipient = requests[requestId];
-
         if (recipient != address(0)) {
-            // track steps redeemed
-            _steps[recipient] = _steps[recipient] + steps;
-
-            // grant tokens for steps
-            transfer(recipient, stepRate * steps);
+            // track steps to be redeemed
+            _steps[recipient] += steps;
         }
 
         // cleanup
-        delete requests[requestId];        
+        delete requests[requestId];
+    }
 
+    function redeem(address recipient) public payable returns (bool result) {
+        if (_steps[recipient] != 0) {
+            transfer(recipient, _steps[recipient]*stepRate);
+            delete _steps[recipient];
+            return true;
+        } 
+        return false;
     }
 
     function getSteps(address recipient) public view returns (uint256 result) {

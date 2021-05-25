@@ -17,11 +17,31 @@ export async function getTokenBalance(address) {
     return balance.toString();    
 }
 
-export async function redeemTokens(address) {
+export async function transferSteps(address) {
     const provider = new ethers.providers.AlchemyProvider(process.env.ETH_NET, process.env.ALCHEMY_KEY);
     let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
     let contract = new ethers.Contract(TokenAbi.address, TokenAbi.abi, wallet);
     await contract.requestRedemption(address);
+}
+
+export async function getSteps(address) {
+    const provider = new ethers.providers.AlchemyProvider(process.env.ETH_NET, process.env.ALCHEMY_KEY);
+    const contract = new ethers.Contract(TokenAbi.address, TokenAbi.abi, provider);
+    const steps = await contract.getSteps(address);
+    return steps.toNumber();    
+}
+
+export async function redeemTokens(address) {
+    const provider = new ethers.providers.AlchemyProvider(process.env.ETH_NET, process.env.ALCHEMY_KEY);
+    let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+    let contract = new ethers.Contract(TokenAbi.address, TokenAbi.abi, wallet);
+
+    if (await contract.getSteps(address) !== 0) {
+        await contract.redeem(address);
+        return true;
+    }
+
+    return false;
 }
 
 export async function getStepRate() {

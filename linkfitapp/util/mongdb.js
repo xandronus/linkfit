@@ -146,7 +146,7 @@ export async function redeemSteps(addr) {
         try {
             var savedHealthRec = await healthRec.save();
             redeemedIds.push(savedHealthRec._id);
-            console.log(`Successfully updated health data ${healRec._id}`)
+            console.log(`Successfully updated health data ${healthRec._id}`)
         } catch(err) {
             console.log(`Failure updating health data ${healthRec._id} - ${err.message}`);
         }        

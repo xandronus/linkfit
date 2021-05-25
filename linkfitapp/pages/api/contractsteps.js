@@ -14,10 +14,10 @@ export default async (req, res) => {
     if (req.method === 'GET') {            
       const url = new URL(req.url, 'http://localhost');
       const query = parseQuery(url.search.substr(1));
-      console.log(`GET /balance => cryptoaddr: ${query.cryptoaddr}`);
+      console.log(`GET /contractsteps => cryptoaddr: ${query.cryptoaddr}`);
       var addr = await crypto.normalizeAddress(query.cryptoaddr);
-      var coinBalance = await crypto.getTokenBalance(addr);
-      respBody = {success:true, balance:coinBalance};
+      var steps = await crypto.getSteps(addr);
+      respBody = {success:true, steps:steps};
       respStatus = 200;  
     }        
   }
