@@ -35,7 +35,7 @@ export async function redeemTokens(address) {
     let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
     let contract = new ethers.Contract(TokenAbi.address, TokenAbi.abi, wallet);
 
-    if (await contract.getSteps(address) !== 0) {
+    if (await contract.getSteps(address).toNumber() !== 0) {
         await contract.redeem(address);
         return true;
     }
