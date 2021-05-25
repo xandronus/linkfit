@@ -156,7 +156,7 @@ export async function redeemSteps(addr) {
     if (redeemedIds.length > 0) {
         try {
             var id = newId();
-            var newRedeemed = new model.Redeemed({_id: id, addr, timestamp:date, steps:cumulativeSteps, healthDataRecs: redeemedIds});
+            var newRedeemed = new model.Redeemed({_id: id, cryptoaddr:addr, timestamp:date, steps:cumulativeSteps, healthDataRecs: redeemedIds});
             var savedRedeemed = await newRedeemed.save();
             console.log(`Created redeemed ${savedRedeemed._id}`);
         } catch(err) {
