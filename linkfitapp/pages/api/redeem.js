@@ -15,7 +15,7 @@ export default async (req, res) => {
       const query = parseQuery(url.search.substr(1));
       console.log(`POST /redeem => cryptoaddr: ${query.cryptoaddr}`);      
       var addr = await crypto.normalizeAddress(query.cryptoaddr);
-      if (database.isRedeemSteps()) {
+      if (await database.isRedeemSteps()) {
         console.log('  Steps are available to redeem, initiating contract');
         await crypto.transferSteps(addr);
       }
