@@ -13,8 +13,7 @@ export async function getEthBalance(address) {
 export async function getTokenBalance(address) {
     const provider = new ethers.providers.AlchemyProvider(process.env.ETH_NET, process.env.ALCHEMY_KEY);
     const contract = new ethers.Contract(TokenAbi.address, TokenAbi.abi, provider);
-    const balance = await contract.balanceOf(address);
-    return balance.toString();    
+    return ethers.utils.formatEther(await contract.balanceOf(address));    
 }
 
 export async function transferSteps(address) {
