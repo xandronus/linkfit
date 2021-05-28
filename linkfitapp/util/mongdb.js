@@ -114,7 +114,7 @@ export async function isRedeemSteps(addr) {
     console.log(`isRedeem search filter: ${JSON.stringify(search)}`);
 
     try {
-        var rec = await model.HealthData.findOne(search);
+        var rec = await model.HealthData.exists(search);
         if (rec) {
             result = true;
         }

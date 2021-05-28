@@ -84,7 +84,7 @@ function settingsCallback(data) {
   }
   if (data.cryptoBal){
     var cryptoVal = new Number(data.cryptoBal);
-    txtCrypto.text = `${cryptoVal.toFixed(1)}`;
+    txtCrypto.text = `${cryptoVal.toFixed(0)}`;
   }
 }
 simpleSettings.initialize(settingsCallback);

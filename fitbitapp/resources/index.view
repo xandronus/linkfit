@@ -3,6 +3,7 @@
   <text id="txtTime" class="clock-text">13:37</text>
   <rect class="divider divider-top" />
   <text id="txtDate" class="date-text">MON JANUARY 01</text>
+  <image href="images/ethlogo.png" class="ethlogo" />
   <text id="txtCrypto" class="crypto-text">0</text>
   <rect class="divider divider-btm" />
   <svg class="stats">
