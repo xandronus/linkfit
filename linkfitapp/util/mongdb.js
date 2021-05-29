@@ -166,3 +166,10 @@ export async function redeemSteps(addr) {
 
     return cumulativeSteps;
 }
+
+export async function getHistory() {
+    console.log('Querying Redeemed');
+    const model = DbSchema.getModels();
+    var recs = await model.Redeemed.find({}).sort({timestamp: -1}).limit(10);
+    return recs;
+}
