@@ -6,28 +6,29 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>LinkeFit</title>
+        <title>LinkFit</title>
         <meta name="description" content="LFIT Crypto Token" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        <span className={styles.logo}>
-            <Image src="/resources/linkfit.png" alt="LinkFit Logo" width={100} height={100} />
-        </span>
-
-        <h1 className={styles.title}>
-          LinkFit
-        </h1>
+        <div>
+          <span className={styles.logo}>
+              <Image src="/resources/linkfit.png" alt="LinkFit Logo" width={100} height={100} />
+          </span>
+          <h1 className={styles.title}>
+            LinkFit
+          </h1>
+        </div>
 
         <p className={styles.description}>
-           Earn Crypto Rewards for Exercise! Tracked with your health device.
+           Earn Crypto Rewards for Exercise!
         </p>
 
         <div className={styles.grid}>
           <a href="https://github.com/xandronus/linkfit" className={styles.card}>
             <h2>Github &rarr;</h2>
-            <p>Find in-depth information about LinkFit features and API.</p>
+            <p>Find in-depth information about LinkFit.</p>
           </a>
         </div>
       </main>
