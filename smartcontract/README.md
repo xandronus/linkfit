@@ -1,11 +1,3 @@
-<br/>
-<p align="center">
-<a href="https://chain.link" target="_blank">
-<img src="https://raw.githubusercontent.com/smartcontractkit/chainlink-hardhat-box/master/box-img-lg.png" width="225" alt="Chainlink Hardhat logo">
-</a>
-</p>
-<br/>
-
 # LinkFitToken Contract
  
  Kovan
@@ -15,7 +7,8 @@
 
 - [NPM](https://www.npmjs.com/) or [YARN](https://yarnpkg.com/)
 
-## Installation
+## Installation 
+Installation is via [HardHat](https://hardhat.org)
 
 Set your `KOVAN_RPC_URL` [environment variable.](https://www.twilio.com/blog/2017/01/how-to-set-environment-variables.html). You can get one for free at [Infura's site.](https://infura.io/). You'll also need to set the variable `PRIVATE_KEY` which is your private key from you wallet, ie metamask. 
 
