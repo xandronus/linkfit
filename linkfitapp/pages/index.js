@@ -13,9 +13,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <div>
-          <span className={styles.logo}>
-              <Image src="/resources/linkfit.png" alt="LinkFit Logo" width={100} height={100} />
-          </span>
+          <Image src="/resources/linkfit.png" alt="LinkFit Logo" width={100} height={100} />
           <h1 className={styles.title}>
             LinkFit
           </h1>
