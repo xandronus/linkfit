@@ -1,10 +1,9 @@
-![](linkfitapp/public/resources/linkfit.png)
 # LinkFit #
 ### Crypto Rewards for healthy behavior ###
 
 LinkFit(LFIT) is a ERC20 token that is rewarded through fitbit activity and tracked through a custom fitbit application.
 
-Watch an overview and demo of the application in action
+Watch an overview and demo of the application in action in this
 [Demo Video](https://www.youtube.com/watch?v=dujMX-tScGs)
 
 ## Sequence Diagram ##
@@ -12,6 +11,10 @@ Watch an overview and demo of the application in action
 
 ## How to Build & Run ##
 Components:
-* [Smart Contract](smartcontract/README.md)
-* [FitBit App](fitbitapp/README.md)
-* [LinkFit API and website](linkfitapp/README.md)
+* /smartcontract : [Token Smart Contract](smartcontract/README.md)
+* /fitbitapp : [Custom FitBit App](fitbitapp/README.md)
+* /linkfitapp : [LinkFit API and website](linkfitapp/README.md)
+
+## How to Contribute ##
+* PRs and suggestions are welcome!
+* Join the discussion in the [Github Discussions](https://github.com/xandronus/linkfit/discussions)
