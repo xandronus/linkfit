@@ -8,9 +8,9 @@ Watch an overview and demo of the application in action in this
 [Demo Video](https://www.youtube.com/watch?v=dujMX-tScGs)
 
 Project consists of:
-...Custom fitbit app/companion app build with FitBit SDK
-...An ERC20 smart contract enhanced with chainlink oracle deploy by Hardhat
-...An set of serverless APIs and website hosted in Vercel with NextJS
+Custom fitbit app/companion app build with FitBit SDK<br/>
+An ERC20 smart contract enhanced with chainlink oracle deploy by Hardhat<br/>
+An set of serverless APIs and website hosted in Vercel with NextJS
 <br clear="left"/>
 
 ## Sequence Diagram ##
