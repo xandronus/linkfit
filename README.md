@@ -1,5 +1,5 @@
 # LinkFit #
-### Crypto Rewards for healthy behavior ###
+### Earn Crypto Rewards for Exercise ###
 
 LinkFit(LFIT) is a ERC20 token that is rewarded through fitbit activity and tracked through a custom fitbit application.
 
