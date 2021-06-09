@@ -1,12 +1,16 @@
 # LinkFit #
 ### Earn Crypto Rewards for Exercise ###
-<img src="/docs/fitbit.png" align="left" width="200px"/>
+<img src="/docs/fitbit-app.PNG" align="left" width="200px"/>
 
 LinkFit(LFIT) is a ERC20 token that is rewarded through fitbit activity and tracked through a custom fitbit application.
 
 Watch an overview and demo of the application in action in this
 [Demo Video](https://www.youtube.com/watch?v=dujMX-tScGs)
 
+Project consists of:<br/><br/>
+Custom fitbit app/companion app build with FitBit SDK<br/>
+An ERC20 smart contract enhanced with chainlink oracle deploy by Hardhat<br/>
+An set of serverless APIs and website hosted in Vercel with NextJS
 <br clear="left"/>
 
 ## Sequence Diagram ##
