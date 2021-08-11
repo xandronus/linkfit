@@ -19,7 +19,8 @@ export var DbSchema = (function(){
                 _id: mongoose.Schema.Types.ObjectId,
                 fitbitid: String,
                 cryptoaddr: String,
-                timestamp: Date,
+                timestamp: Date, 
+                yyyymmdd: Number, 
                 steps: Number,
                 claimed: Boolean
             });            
