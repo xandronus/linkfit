@@ -1,21 +1,28 @@
 import * as mongoose from 'mongoose'
 import {DbSchema} from './mongodbschema'
-import * as fns from 'date-fns'
+import * as fns from 'date-fns-tz'
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }  
 
-export async function connect() {
-    if (mongoose.connection.readyState != 1) {
-        await mongoose.connect(process.env.DB_CONN, { useNewUrlParser: true });
-        DbSchema.createSchemas();
-        DbSchema.createModel();
-      }
+function dateToDateNbr(date) {
+    var utcDate = fns.utcToZonedTime(date, 'UTC');
+    return Number(fns.format(utcDate, 'yyyyMMdd', { timeZone: 'UTC' }));
 }
 
-export function newId() {
-    return new mongoose.Types.ObjectId;
+function redeemFilter(addr) {
+    var dateNow = new Date(Date.now());
+    var dateNbr = dateToDateNbr(dateNow); // UTC in yyyyMMdd
+    var search = {
+        cryptoaddr: addr,
+        claimed: false, 
+        yyyymmdd: {
+            $lt: dateNbr
+        }
+    };    
+    console.log(`isRedeem search filter: ${JSON.stringify(search)}`);
+    return search;
 }
 
 async function createAccount(fbid, cpid, date) {
@@ -31,29 +38,43 @@ async function createAccount(fbid, cpid, date) {
     }
 }
 
+export async function connect() {
+    if (mongoose.connection.readyState != 1) {
+        await mongoose.connect(process.env.DB_CONN, { useNewUrlParser: true });
+        DbSchema.createSchemas();
+        DbSchema.createModel();
+      }
+}
+
+export function newId() {
+    return new mongoose.Types.ObjectId;
+}
+
 export async function addOrGetAccount(fbid, cpid) {
     console.log(`addOrGetAccount(${fbid}, ${cpid})`);
     const model = DbSchema.getModels();
+    var date = new Date(Date.now());
     if (!model || !model.Account) {
         console.log('calling create account');
-        await createAccount(fbid, cpid, Date.now());    
+        await createAccount(fbid, cpid, date);    
     } else {
         var search = {fitbitid: fbid, cryptoaddr: cpid};
         var account = await model.Account.findOne(search);
         if (!account) {
-            await createAccount(fbid, cpid, Date.now());
+            await createAccount(fbid, cpid, date);
         } else {
             console.log('found account');
         }
     }
 }
 
-async function createHealthData(health, date) {
+async function createHealthData(health, dateNbr) {
     var id = newId();
     console.log(`Creating new daily health record ${id}`);
     try {
         const model = DbSchema.getModels();
-        var newhealthData = new model.HealthData({_id: id, fitbitid:health.fitbitid, cryptoaddr:health.cryptoaddr, timestamp:date, steps:health.steps, claimed:false});
+        var date = new Date(Date.now());
+        var newhealthData = new model.HealthData({_id: id, fitbitid:health.fitbitid, cryptoaddr:health.cryptoaddr, timestamp:date, yyyymmdd:dateNbr, steps:health.steps, claimed:false});
         var savedHealth = await newhealthData.save();
         console.log(`Created health data ${savedHealth._id}`);
     } catch(err) {
@@ -63,30 +84,28 @@ async function createHealthData(health, date) {
 
 export async function syncHealthData(health) {
     const model = DbSchema.getModels();
-
-    var date = new Date(health.timestamp);
+    var dateNbr = dateToDateNbr(new Date(health.timestamp));
+    console.log(`syncHealthData() - timestamp: ${health.timestamp}, dateNbr: ${dateNbr}`);
 
     if (!model.HealthData) {
-        await createHealthData(health, date);
+        await createHealthData(health, dateNbr);
     } else {
         // get current record for today
         var search = {
             fitbitid: health.fitbitid, 
             cryptoaddr: health.cryptoaddr, 
-            timestamp: {
-                $gte: fns.startOfDay(date),
-                $lt: fns.endOfDay(date)
-            }
+            yyyymmdd: dateNbr
         };
         console.log(`Health search filter: ${JSON.stringify(search)}`);
         var healthData = await model.HealthData.findOne(search);
         if (!healthData) {
-            await createHealthData(health, date);
+            await createHealthData(health, dateNbr);
         } else {
             console.log(`Updating daily health record ${healthData._id}`);
             if (healthData.steps !== health.steps) {
                 healthData.steps = health.steps;
-                healthData.timestamp = date;
+                healthData.timestamp = new Date(Date.now());
+                healthData.yyyymmdd = dateNbr;
                 try {
                     var savedHealth = await healthData.save();
                     console.log(`Updated health data ${savedHealth._id}`);
@@ -103,15 +122,7 @@ export async function syncHealthData(health) {
 export async function isRedeemSteps(addr) {
     var result = false;
     const model = DbSchema.getModels();
-    var date = new Date(Date.now());
-    var search = {
-        cryptoaddr: addr,
-        claimed: false, 
-        timestamp: {
-            $lt: fns.startOfDay(date)
-        }
-    };
-    console.log(`isRedeem search filter: ${JSON.stringify(search)}`);
+    var search = redeemFilter(addr);
 
     try {
         var rec = await model.HealthData.exists(search);
@@ -128,15 +139,8 @@ export async function isRedeemSteps(addr) {
 export async function redeemSteps(addr) {
     var cumulativeSteps = 0;
     const model = DbSchema.getModels();
-    var date = new Date(Date.now());
-    var search = {
-        cryptoaddr: addr,
-        claimed: false, 
-        timestamp: {
-            $lt: fns.startOfDay(date)
-        }
-    };
-    console.log(`Redeem search filter: ${JSON.stringify(search)}`);
+
+    var search = redeemFilter(addr);
 
     // redeem individual records
     const redeemedIds = [];
@@ -156,6 +160,7 @@ export async function redeemSteps(addr) {
     if (redeemedIds.length > 0) {
         try {
             var id = newId();
+            var date = new Date(Date.now());
             var newRedeemed = new model.Redeemed({_id: id, cryptoaddr:addr, timestamp:date, steps:cumulativeSteps, healthDataRecs: redeemedIds});
             var savedRedeemed = await newRedeemed.save();
             console.log(`Created redeemed ${savedRedeemed._id}`);

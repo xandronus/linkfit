@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "date-fns": "^2.21.3",
+    "date-fns-tz": "^1.1.6",
     "dotenv": "^9.0.2",
     "ethers": "^5.2.0",
     "mongodb": "^3.6.6",
