@@ -21,6 +21,7 @@ export var DbSchema = (function(){
                 cryptoaddr: String,
                 timestamp: Date, 
                 yyyymmdd: Number, 
+                timezone: String,
                 steps: Number,
                 claimed: Boolean
             });            
