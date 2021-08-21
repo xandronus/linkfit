@@ -1,6 +1,6 @@
 import {parse as parseQuery} from "querystring";
 import * as database from "../../util/mongdb.js"
-import * as crypto from "../../util/crypto.js"
+import * as eci from "../../util/ethcrypto.js"
 
 export default async (req, res) => {
   var success = false
@@ -14,6 +14,7 @@ export default async (req, res) => {
       const url = new URL(req.url, 'http://localhost');
       const query = parseQuery(url.search.substr(1));
       console.log(`POST /redeem => cryptoaddr: ${query.cryptoaddr}`);      
+      var crypto = eci.EthCrypto;
       var addr = await crypto.normalizeAddress(query.cryptoaddr);
       if (await database.isRedeemSteps(addr)) {
         console.log('  Steps are available to redeem, initiating contract');
