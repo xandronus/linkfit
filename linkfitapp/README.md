@@ -25,6 +25,7 @@ Content-Type: application/json
     "fitbitid": "12345",
     "cryptoaddr": "0xABCD000EF1111",
     "timestamp": "2021-05-17T01:41:15.348Z",
+    "timezone": "America/Edmonton",
     "steps": 113
 }
 
