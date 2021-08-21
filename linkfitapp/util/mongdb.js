@@ -6,14 +6,14 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }  
 
-function dateToDateNbr(date) {
-    var utcDate = fns.utcToZonedTime(date, 'UTC');
-    return Number(fns.format(utcDate, 'yyyyMMdd', { timeZone: 'UTC' }));
+function dateToDateNbr(date, zone) {
+    var utcDate = fns.utcToZonedTime(date, zone);
+    return Number(fns.format(utcDate, 'yyyyMMdd', { timeZone: zone }));
 }
 
-function redeemFilter(addr) {
+function redeemFilter(addr, timezone) {
     var dateNow = new Date(Date.now());
-    var dateNbr = dateToDateNbr(dateNow); // UTC in yyyyMMdd
+    var dateNbr = dateToDateNbr(dateNow, timezone); 
     var search = {
         cryptoaddr: addr,
         claimed: false, 
@@ -73,8 +73,8 @@ async function createHealthData(health, dateNbr) {
     console.log(`Creating new daily health record ${id}`);
     try {
         const model = DbSchema.getModels();
-        var date = new Date(Date.now());
-        var newhealthData = new model.HealthData({_id: id, fitbitid:health.fitbitid, cryptoaddr:health.cryptoaddr, timestamp:date, yyyymmdd:dateNbr, steps:health.steps, claimed:false});
+        var date = new Date(health.timestamp);
+        var newhealthData = new model.HealthData({_id: id, fitbitid:health.fitbitid, cryptoaddr:health.cryptoaddr, timestamp:date, yyyymmdd:dateNbr, timezone:health.timezone, steps:health.steps, claimed:false});
         var savedHealth = await newhealthData.save();
         console.log(`Created health data ${savedHealth._id}`);
     } catch(err) {
@@ -82,10 +82,25 @@ async function createHealthData(health, dateNbr) {
     }    
 }
 
+async function getTimeZone(addr) {
+    var search = {
+        cryptoaddr: addr
+    };
+    console.log(`Health search filter: ${JSON.stringify(search)}`);
+    const model = DbSchema.getModels();
+    var healthData = await model.HealthData.findOne(search);
+    if (!healthData) {
+        return 'UTC';
+    } else {
+        return healthData.timezone;
+    }
+}
+
 export async function syncHealthData(health) {
     const model = DbSchema.getModels();
-    var dateNbr = dateToDateNbr(new Date(health.timestamp));
-    console.log(`syncHealthData() - timestamp: ${health.timestamp}, dateNbr: ${dateNbr}`);
+    var timestamp = new Date(health.timestamp);
+    var dateNbr = dateToDateNbr(timestamp, health.timezone);
+    console.log(`syncHealthData() - timestamp: ${health.timestamp}, timezone: ${health.timezone}, dateNbr: ${dateNbr}`);
 
     if (!model.HealthData) {
         await createHealthData(health, dateNbr);
@@ -94,7 +109,8 @@ export async function syncHealthData(health) {
         var search = {
             fitbitid: health.fitbitid, 
             cryptoaddr: health.cryptoaddr, 
-            yyyymmdd: dateNbr
+            yyyymmdd: dateNbr,
+            timezone: health.timezone
         };
         console.log(`Health search filter: ${JSON.stringify(search)}`);
         var healthData = await model.HealthData.findOne(search);
@@ -104,7 +120,7 @@ export async function syncHealthData(health) {
             console.log(`Updating daily health record ${healthData._id}`);
             if (healthData.steps !== health.steps) {
                 healthData.steps = health.steps;
-                healthData.timestamp = new Date(Date.now());
+                healthData.timestamp = timestamp;
                 healthData.yyyymmdd = dateNbr;
                 try {
                     var savedHealth = await healthData.save();
@@ -122,7 +138,8 @@ export async function syncHealthData(health) {
 export async function isRedeemSteps(addr) {
     var result = false;
     const model = DbSchema.getModels();
-    var search = redeemFilter(addr);
+    var timezone = await getTimeZone(addr);
+    var search = redeemFilter(addr, timezone);
 
     try {
         var rec = await model.HealthData.exists(search);
@@ -140,7 +157,8 @@ export async function redeemSteps(addr) {
     var cumulativeSteps = 0;
     const model = DbSchema.getModels();
 
-    var search = redeemFilter(addr);
+    var timezone = await getTimeZone(addr);
+    var search = redeemFilter(addr, timezone);
 
     // redeem individual records
     const redeemedIds = [];

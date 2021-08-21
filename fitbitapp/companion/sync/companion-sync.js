@@ -56,6 +56,7 @@ export function onHealthSync(data) {
         fitbitid: data.fitbitId,
         cryptoaddr: data.ethAddr.name,
         timestamp: data.dateTime,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         steps: data.activity.steps
     };
     console.log(`POST: ${url} - ${JSON.stringify(opts)}`);
