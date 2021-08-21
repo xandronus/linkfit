@@ -1,5 +1,5 @@
 import {parse as parseQuery} from "querystring";
-import * as crypto from "../../util/crypto.js"
+import * as eci from "../../util/ethcrypto.js"
 
 export default async (req, res) => {
     var respBody = {success:false};
@@ -8,6 +8,7 @@ export default async (req, res) => {
     if (req.method === 'GET') {            
         const url = new URL(req.url, 'http://localhost');
         const query = parseQuery(url.search.substr(1));        
+        var crypto = eci.EthCrypto;
         if (query.cryptoaddr) {
             console.log(`GET /cryptoaddr => cryptoaddr: ${query.cryptoaddr}`);
             var addr = await crypto.normalizeAddress(query.cryptoaddr);
