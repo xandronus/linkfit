@@ -21,6 +21,7 @@ export var DbSchema = (function(){
                 _id: mongoose.Schema.Types.ObjectId,
                 devicetype: String,
                 deviceid: String,
+                cryptonetwork: String,
                 cryptoaddr: String,
                 timestamp: Date, 
                 yyyymmdd: Number, 

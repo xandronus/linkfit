@@ -75,7 +75,7 @@ async function createHealthData(health, dateNbr) {
     try {
         const model = DbSchema.getModels();
         var date = new Date(health.timestamp);
-        var newhealthData = new model.HealthData({_id: id, devicetype:health.devicetype, deviceid:health.deviceid, cryptoaddr:health.cryptoaddr, timestamp:date, yyyymmdd:dateNbr, timezone:health.timezone, steps:health.steps, claimed:false});
+        var newhealthData = new model.HealthData({_id: id, devicetype:health.devicetype, deviceid:health.deviceid, cryptonetwork:health.cryptonetwork, cryptoaddr:health.cryptoaddr, timestamp:date, yyyymmdd:dateNbr, timezone:health.timezone, steps:health.steps, claimed:false});
         var savedHealth = await newhealthData.save();
         console.log(`Created health data ${savedHealth._id}`);
     } catch(err) {
@@ -109,7 +109,8 @@ export async function syncHealthData(health) {
         // get current record for today
         var search = {
             devicetype: health.devicetype,
-            deviceid: health.deviceid, 
+            deviceid: health.deviceid,
+            cryptonetwork: health.cryptonetwork, 
             cryptoaddr: health.cryptoaddr, 
             yyyymmdd: dateNbr,
             timezone: health.timezone
