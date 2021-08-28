@@ -32,6 +32,10 @@ export default function Home() {
           </a>
         </div>
 
+        <div>
+          <iframe src="https://open.spotify.com/embed/playlist/3wg08oX3FjhR50uzN7gEzS" width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        </div>
+        
         <div className={styles.grid}>
           <div className={styles.card}>
             <redeem.RedeemHistory />
