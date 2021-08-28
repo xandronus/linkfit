@@ -22,7 +22,9 @@ POST /api/synchealth HTTP/1.1
 api_key: {INSERT_API_KEY_HERE}
 Content-Type: application/json
 {
-    "fitbitid": "12345",
+    "devicetype": "fitbit",
+    "deviceid": "12345",
+    "cryptonetwork": "eth",
     "cryptoaddr": "0xABCD000EF1111",
     "timestamp": "2021-05-17T01:41:15.348Z",
     "timezone": "America/Edmonton",
@@ -76,12 +78,6 @@ RESPONSE:
 ```
 REQUEST:
 GET /api/cryptoaddr?cryptoaddr={ETH_ADDRESS_HERE} HTTP/1.1
-
-RESPONSE:
-{
-    "success": true,
-    "steps": "100"
-}
 ```
 
 ## Configuration
