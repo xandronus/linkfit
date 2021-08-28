@@ -110,7 +110,7 @@ export async function syncHealthData(health) {
         var search = {
             devicetype: health.devicetype,
             deviceid: health.deviceid,
-            cryptonetwork: health,cryptonetwork, 
+            cryptonetwork: health.cryptonetwork, 
             cryptoaddr: health.cryptoaddr, 
             yyyymmdd: dateNbr,
             timezone: health.timezone
