@@ -16,7 +16,7 @@ export default async (req, res) => {
         if (addr != null) {
           console.log(`  CryptoAddr normalized to ${addr}`);
           req.body.cryptoaddr = addr;
-          await database.addOrGetAccount(req.body.fitbitid, req.body.cryptoaddr);
+          await database.addOrGetAccount(req.body.devicetype, req.body.deviceid, req.body.cryptonetwork, req.body.cryptoaddr);
           await database.syncHealthData(req.body);
           success = true;  
         }

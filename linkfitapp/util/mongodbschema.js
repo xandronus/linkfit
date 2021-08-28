@@ -9,7 +9,9 @@ export var DbSchema = (function(){
         if (!_accountSchema) {
             _accountSchema =  new mongoose.Schema({
                 _id: mongoose.Schema.Types.ObjectId,
-                fitbitid: String,
+                devicetype: String,
+                deviceid: String,
+                cryptonetwork: String,
                 cryptoaddr: String,
                 timestamp: Date
             });
@@ -17,7 +19,8 @@ export var DbSchema = (function(){
         if (!_healthDataSchema) {
             _healthDataSchema = new mongoose.Schema({
                 _id: mongoose.Schema.Types.ObjectId,
-                fitbitid: String,
+                devicetype: String,
+                deviceid: String,
                 cryptoaddr: String,
                 timestamp: Date, 
                 yyyymmdd: Number, 
@@ -29,6 +32,7 @@ export var DbSchema = (function(){
         if (!_redeemedSchema) {
             _redeemedSchema = new mongoose.Schema({
                 _id: mongoose.Schema.Types.ObjectId,
+                cryptonetwork: String,
                 cryptoaddr: String,
                 timestamp: Date,
                 steps: Number,

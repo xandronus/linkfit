@@ -11,10 +11,11 @@ function dateToDateNbr(date, zone) {
     return Number(fns.format(utcDate, 'yyyyMMdd', { timeZone: zone }));
 }
 
-function redeemFilter(addr, timezone) {
+function redeemFilter(cnet, addr, timezone) {
     var dateNow = new Date(Date.now());
     var dateNbr = dateToDateNbr(dateNow, timezone); 
     var search = {
+        cryptonetwork: cnet,
         cryptoaddr: addr,
         claimed: false, 
         yyyymmdd: {
@@ -25,12 +26,12 @@ function redeemFilter(addr, timezone) {
     return search;
 }
 
-async function createAccount(fbid, cpid, date) {
+async function createAccount(dtype, did, cpnet, cpid, date) {
     console.log('creating account');                
     const model = DbSchema.getModels();
     var id = newId();
     try {
-        var newAccount = new model.Account({_id: id, fitbitid:fbid, cryptoaddr:cpid, timestamp:date});    
+        var newAccount = new model.Account({_id: id, devicetype:dtype, deviceid:did, cryptonetwork: cpnet, cryptoaddr:cpid, timestamp:date});    
         var savedAccount = await newAccount.save();
         console.log(`Successfully created new account ${savedAccount._id}`);
     } catch(err) {
@@ -50,18 +51,18 @@ export function newId() {
     return new mongoose.Types.ObjectId;
 }
 
-export async function addOrGetAccount(fbid, cpid) {
-    console.log(`addOrGetAccount(${fbid}, ${cpid})`);
+export async function addOrGetAccount(dtype, did, cpnet, cpid) {
+    console.log(`addOrGetAccount(${did}, ${cpid})`);
     const model = DbSchema.getModels();
     var date = new Date(Date.now());
     if (!model || !model.Account) {
         console.log('calling create account');
-        await createAccount(fbid, cpid, date);    
+        await createAccount(dtype, did, cpid, date);    
     } else {
-        var search = {fitbitid: fbid, cryptoaddr: cpid};
+        var search = {devicetype: dtype, deviceid: did, cryptonetwork: cpnet, cryptoaddr: cpid};
         var account = await model.Account.findOne(search);
         if (!account) {
-            await createAccount(fbid, cpid, date);
+            await createAccount(dtype, did, cpnet, cpid, date);
         } else {
             console.log('found account');
         }
@@ -74,7 +75,7 @@ async function createHealthData(health, dateNbr) {
     try {
         const model = DbSchema.getModels();
         var date = new Date(health.timestamp);
-        var newhealthData = new model.HealthData({_id: id, fitbitid:health.fitbitid, cryptoaddr:health.cryptoaddr, timestamp:date, yyyymmdd:dateNbr, timezone:health.timezone, steps:health.steps, claimed:false});
+        var newhealthData = new model.HealthData({_id: id, devicetype:health.devicetype, deviceid:health.deviceid, cryptoaddr:health.cryptoaddr, timestamp:date, yyyymmdd:dateNbr, timezone:health.timezone, steps:health.steps, claimed:false});
         var savedHealth = await newhealthData.save();
         console.log(`Created health data ${savedHealth._id}`);
     } catch(err) {
@@ -107,7 +108,8 @@ export async function syncHealthData(health) {
     } else {
         // get current record for today
         var search = {
-            fitbitid: health.fitbitid, 
+            devicetype: health.devicetype,
+            deviceid: health.deviceid, 
             cryptoaddr: health.cryptoaddr, 
             yyyymmdd: dateNbr,
             timezone: health.timezone
@@ -135,11 +137,11 @@ export async function syncHealthData(health) {
     }
 }
 
-export async function isRedeemSteps(addr) {
+export async function isRedeemSteps(cnet, addr) {
     var result = false;
     const model = DbSchema.getModels();
     var timezone = await getTimeZone(addr);
-    var search = redeemFilter(addr, timezone);
+    var search = redeemFilter(cnet, addr, timezone);
 
     try {
         var rec = await model.HealthData.exists(search);
@@ -153,12 +155,12 @@ export async function isRedeemSteps(addr) {
     return result;
 }
 
-export async function redeemSteps(addr) {
+export async function redeemSteps(cnet, addr) {
     var cumulativeSteps = 0;
     const model = DbSchema.getModels();
 
     var timezone = await getTimeZone(addr);
-    var search = redeemFilter(addr, timezone);
+    var search = redeemFilter(cnet, addr, timezone);
 
     // redeem individual records
     const redeemedIds = [];
@@ -179,7 +181,7 @@ export async function redeemSteps(addr) {
         try {
             var id = newId();
             var date = new Date(Date.now());
-            var newRedeemed = new model.Redeemed({_id: id, cryptoaddr:addr, timestamp:date, steps:cumulativeSteps, healthDataRecs: redeemedIds});
+            var newRedeemed = new model.Redeemed({_id: id, cryptonetwork:cnet, cryptoaddr:addr, timestamp:date, steps:cumulativeSteps, healthDataRecs: redeemedIds});
             var savedRedeemed = await newRedeemed.save();
             console.log(`Created redeemed ${savedRedeemed._id}`);
         } catch(err) {
