@@ -25,3 +25,5 @@ Components:
 ## How to Contribute ##
 * PRs and suggestions are welcome!
 * Join the discussion in the [Github Discussions](https://github.com/xandronus/linkfit/discussions)
+
+<iframe src="https://open.spotify.com/embed/playlist/3wg08oX3FjhR50uzN7gEzS" width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
