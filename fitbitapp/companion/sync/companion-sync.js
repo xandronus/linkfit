@@ -53,7 +53,9 @@ export function onHealthSync(data) {
     const url = data.apiUrl.name + '/synchealth';
     var opts = 
     {
-        fitbitid: data.fitbitId,
+        devicetype: 'fitbit',
+        deviceid: data.fitbitId,
+        cryptonetwork: 'eth',
         cryptoaddr: data.ethAddr.name,
         timestamp: data.dateTime,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,

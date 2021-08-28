@@ -2,6 +2,7 @@ import {parse as parseQuery} from "querystring";
 import * as database from "../../util/mongdb.js"
 import * as eci from "../../util/ethcrypto.js"
 
+// Called from device to initiate sc redemption process
 export default async (req, res) => {
   var success = false
   await database.connect();
@@ -16,7 +17,7 @@ export default async (req, res) => {
       console.log(`POST /redeem => cryptoaddr: ${query.cryptoaddr}`);      
       var crypto = eci.EthCrypto;
       var addr = await crypto.normalizeAddress(query.cryptoaddr);
-      if (await database.isRedeemSteps(addr)) {
+      if (await database.isRedeemSteps('eth', addr)) {
         console.log('  Steps are available to redeem, initiating contract');
         await crypto.transferSteps(addr);
       }
